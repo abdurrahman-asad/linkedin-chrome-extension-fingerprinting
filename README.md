@@ -5,30 +5,50 @@ This experiment is inspired by [this](https://github.com/mdp/linkedin-extension-
 You can see all these extensions in the [`list_of_extensions.csv`](list_of_extensions.csv) file.
 
 ### Setup
-If you want to check it in your case, below is a very simple script(why over-engineer when it works) that I ran to get the extension names. If you run into any issues, check out the repo mentioned above for a better setup.
+To check fingerprinting on your profile, below is a very simple script(why over-engineer when it works) that I ran to get the extension names. If you run into any issues, check out the repo mentioned above for a better setup.
 
 ```javascript
 import fs from "fs/promises";
-const outputFile = "extension_titles.jsonl";
+const outputFile = "list_of_extensions.csv";
 
-const tryFetch = async (url) => {
-  const text = await (await fetch(url)).text();
-  return text.match(/<title>(.*?)<\/title>/i)?.[1] || "";
+// Write CSV header
+await fs.writeFile(outputFile, "id,title,url\n");
+
+const tryFetch = async (url, retries = 2) => {
+  try {
+    const text = await (await fetch(url)).text();
+    return text.match(/<title>(.*?)<\/title>/i)?.[1] || "";
+  } catch (error) {
+    if (retries > 0) {
+      console.log(`Retrying ${url}...`);
+      await new Promise(resolve => setTimeout(resolve, 500));
+      return tryFetch(url, retries - 1);
+    }
+    console.error(`Failed to fetch ${url}:`, error.message);
+    return "";
+  }
 };
 
 const fetchTitle = async (id) => {
-  let title = await tryFetch(`https://chromewebstore.google.com/detail/${id}`);
+  let url = `https://chromewebstore.google.com/detail/${id}`;
+  let title = await tryFetch(url);
+
   // if not found, chrome store redirects to home page
   if (!title || title === "Chrome Web Store") {
-    title = await tryFetch(`https://extpose.com/ext/${id}`);
+    url = `https://extpose.com/ext/${id}`;
+    title = await tryFetch(url);
+    // Clean Extpose format: "Name - id - Extpose"
+    title = title.replace(/ - [a-z]+ - Extpose$/i, "").trim();
+  } else {
+    // Clean Chrome Web Store format: "Name - Chrome Web Store"
+    title = title.replace(/ - Chrome Web Store$/i, "").trim();
   }
 
   title = title || "Title not found";
   console.log(`ID: ${id}, Title: ${title}`);
-  return { id, title };
+  return { id, title, url };
 };
 
-const ids = new Set(extensions.map((e) => e.id));
 const batchSize = 50;
 const idsArray = [...ids];
 
@@ -39,7 +59,10 @@ for (let i = 0; i < idsArray.length; i += batchSize) {
   );
 
   const results = await Promise.all(batch.map(fetchTitle));
-  const lines = results.map((r) => JSON.stringify(r)).join("\n") + "\n";
+  const lines =
+    results
+      .map((r) => `${r.id},"${r.title.replace(/"/g, '""')}",${r.url}`)
+      .join("\n") + "\n";
   await fs.appendFile(outputFile, lines);
 }
 ```
@@ -53,4 +76,4 @@ https://github.com/user-attachments/assets/d635e208-428b-4fa8-b2fa-9d0d5d15f98d
 
 
 
-Copy this array, store it in `extensions` and run the script to get `extension_titles.jsonl` file with the results.
+Copy this array, store it in `extensions` and run the script to get `list_of_extensions.csv` file with the results.
