@@ -1,11 +1,11 @@
 ## LinkedIn silently probes for 6000+ Chrome Extensions
 
-This experiment is inspired by [this](https://github.com/mdp/linkedin-extension-fingerprinting) repo. While I was inspecting the script responsible for fingerprinting, I found out the number of extensions in my case is almost double. So the list might be different for different users based on region and/or other factors that I don't know.
+This experiment is inspired by [this](https://github.com/mdp/linkedin-extension-fingerprinting) repo. While I was inspecting the script responsible for fingerprinting, I found out that the number of extensions in my case is almost double(6153). So the list might be different for different users based on region and/or other factors that I don't know.
 
 You can see all these extensions in the [`list_of_extensions.csv`](list_of_extensions.csv) file.
 
 ### Setup
-To check fingerprinting on your profile, below is a very simple script(why over-engineer when it works) that I ran to get the extension names. If you run into any issues, check out the repo mentioned above for a better setup.
+To check fingerprinting on your profile, below is a very simple script that you can run to get the extension names and URLs. If you run into any issues, check out the repo mentioned above for a better setup.
 
 ```javascript
 import fs from "fs/promises";
