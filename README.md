@@ -4,6 +4,7 @@ This experiment is inspired by [this](https://github.com/mdp/linkedin-extension-
 
 You can see all these extensions in the [`list_of_extensions.csv`](list_of_extensions.csv) file.
 
+### Setup
 If you want to check it in your case, below is a very simple script(why over-engineer when it works) that I ran to get the extension names. If you run into any issues, check out the repo mentioned above for a better setup.
 
 ```javascript
@@ -43,9 +44,13 @@ for (let i = 0; i < idsArray.length; i += batchSize) {
 }
 ```
 
-Here `extensions` is the array extracted from the source script. You can find it as follows:
+Here, `extensions` is the array extracted from the source script. You can find it as follows:
 
 - Open/Refresh LinkedIn, navigate to console in DevTools. You'll see many errors a few seconds after loading the page, and these errors will continue popping up for several minutes due to staggered fetches.
-- Expand any error and go to the initiating line, the one at the bottom of the stack(refer to the video below). A few lines above will be the array with all the IDs and the respective files LinkedIn tries to fetch (in order to check for presence of the extension).
+- Expand any error and go to the initiating line, the one at the bottom of the stack(refer to the video below). A few lines above will be the array with all the IDs and the respective files LinkedIn tries to fetch (in order to check forthe  presence of the extension).
 
-Copy this array, store it in `extensions` and run the script to get `extension_titles.jsonl` file with result.
+https://github.com/user-attachments/assets/d635e208-428b-4fa8-b2fa-9d0d5d15f98d
+
+
+
+Copy this array, store it in `extensions` and run the script to get `extension_titles.jsonl` file with the results.
