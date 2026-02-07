@@ -70,7 +70,7 @@ for (let i = 0; i < idsArray.length; i += batchSize) {
 Here, `extensions` is the array extracted from the source script. You can find it as follows:
 
 - Open/Refresh LinkedIn, navigate to console in DevTools. You'll see many errors a few seconds after loading the page, and these errors will continue popping up for several minutes due to staggered fetches.
-- Expand any error and go to the initiating line, the one at the bottom of the stack(refer to the video below). A few lines above will be the array with all the IDs and the respective files LinkedIn tries to fetch (in order to check forthe  presence of the extension).
+- Expand any error and go to the initiating line, the one at the bottom of the stack(refer to the video below). A few lines above will be the array with all the IDs and the respective files LinkedIn tries to fetch (in order to check for the presence of the extension).
 
 https://github.com/user-attachments/assets/d635e208-428b-4fa8-b2fa-9d0d5d15f98d
 
